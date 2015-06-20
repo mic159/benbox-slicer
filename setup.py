@@ -11,6 +11,9 @@ setup(
     entry_points={
         'console_scripts': [
             'benbox-slicer = benbox_slicer.main:cli'
+        ],
+        'octoprint.plugin': [
+            'benbox_slicer = octoprint_benbox_slicer'
         ]
     }
 )
