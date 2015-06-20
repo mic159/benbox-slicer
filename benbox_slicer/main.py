@@ -18,7 +18,7 @@ class ChoicesInput(object):
 
 def cli():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', type=argparse.FileType('r'), help='File to slice')
+    parser.add_argument('--input', type=argparse.FileType('r'), help='File to slice', required=True)
     parser.add_argument('--speed', type=int, default=200, help='The speed of the laser while on')
     parser.add_argument('--resolution',
                         type=ChoicesInput([1,2,5,10], cast=int),
