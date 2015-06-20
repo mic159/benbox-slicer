@@ -1,5 +1,8 @@
 import argparse
-from benbox_slicer.slicer import do_slice
+import benbox_slicer.image_reader
+import benbox_slicer.conversion
+import benbox_slicer.gcode
+from benbox_slicer import png
 
 
 class ChoicesInput(object):
@@ -15,6 +18,7 @@ class ChoicesInput(object):
         if input not in self.choices:
             raise argparse.ArgumentTypeError('Choices are '+ str(self.choices))
         return input
+
 
 def cli():
     parser = argparse.ArgumentParser()
@@ -34,3 +38,29 @@ def cli():
     args = parser.parse_args()
 
     do_slice(args.input, speed=args.speed, resolution=args.resolution, mode=args.mode)
+
+
+def do_slice(input_file, speed, mode='bw', resolution=10, flip_y=False):
+    w, h, image = benbox_slicer.image_reader.read_image(input_file)
+
+    if mode == 'bw':
+        laser_values = benbox_slicer.conversion.on_off(image, w, h, threshold=128)
+    elif mode == 'random':
+        laser_values = benbox_slicer.conversion.random_threshold(image, w, h)
+    elif mode == 'greyscale':
+        laser_values = benbox_slicer.conversion.greyscale(image, w, h, resolution=128)
+    else:
+        raise ValueError('Mode not supported')
+    del image
+
+    # Write preview PNG
+    with open('preview.png', 'wb') as fle:
+        img = png.Writer(w, h, greyscale=True, bitdepth=8)
+        img.write(fle, laser_values)
+
+    if not flip_y:
+        # 0,0 is normally at the bottom left so we flip the data
+        laser_values.reverse()
+
+    with open('output.gcode', 'w') as file_gcode:
+         benbox_slicer.gcode.write_gcode(file_gcode, w, h, laser_values, resolution=resolution, speed=speed)

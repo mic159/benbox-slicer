@@ -1,6 +1,16 @@
+from benbox_slicer import png
+
 """
 Convert the PNG data to a flat array of greyscale pixels (0-255)
 """
+
+def read_image(input_file, conv_method=None):
+    if conv_method == None:
+        conv_method = mix
+    reader = png.Reader(input_file)
+
+    w, h, pixels, metadata = reader.read_flat()
+    return w, h, conv_method(w, h, pixels, metadata)
 
 def mix(w, h, pixels, metadata):
     #0.21R + 0.71G + 0.07B
