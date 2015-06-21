@@ -45,6 +45,7 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
             data.update(overrides)
         data['display_name'] = profile.display_name
         data['description'] = profile.description
+        data['name'] = profile.name
         with open(path, 'w') as fle:
             json.dump(data, fle)
 
@@ -53,7 +54,7 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
             data = json.load(fle)
         profile = octoprint.slicing.SlicingProfile(
             self.TYPE,
-            name='unknown',
+            name=data.get('name', 'unknown'),
             data=data,
             display_name=data.get('display_name', 'Unknown'),
             description=data.get('description', '')
