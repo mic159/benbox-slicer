@@ -63,8 +63,7 @@ Setting up the benbox with OctoPrint
 
 Currently the benbox does not work out of the box with OctoPrint :(
 
-The benbox does not support checksums in GCODE, and you will have to modify the source code to
-make it work.
+The benbox does not support checksums in GCODE, and you will have to modify the source code to make it work.
 
 Open up [octoprint/util/comm.py](https://github.com/foosel/OctoPrint/blob/e722c2f8adef5dce085205977a0e83331aba5837/src/octoprint/util/comm.py#L1524)
 to around line 1524 and comment out or delete the code so that it always just uses `_doSendWithoutChecksum`.
