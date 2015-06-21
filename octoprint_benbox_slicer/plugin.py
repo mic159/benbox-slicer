@@ -9,7 +9,11 @@ import benbox_slicer.gcode
 
 
 def png_file_support(*args, **kwargs):
-    return {'model': {'png':['png']}}
+    return {
+        'model': {
+            'stl': ['png']
+        }
+    }
 
 class BenboxSlicer(octoprint.plugin.SlicerPlugin,
                    octoprint.plugin.StartupPlugin):
