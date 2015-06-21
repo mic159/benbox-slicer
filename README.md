@@ -5,6 +5,8 @@ Converts PNG raster images into Gcode to be sent to the Benbox Laser Engraver.
 
 Also includes an [OctoPrint](http://octoprint.org/) plugin!
 
+This code was based on Inkscape plugin at [305engineering/Inkscape](https://github.com/305engineering/Inkscape).
+
 Usage
 -----
 
