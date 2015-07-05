@@ -3,6 +3,7 @@ import benbox_slicer.image_reader
 import benbox_slicer.conversion
 import benbox_slicer.gcode
 from benbox_slicer import png
+import os.path
 
 
 class ChoicesInput(object):
@@ -41,6 +42,11 @@ def cli():
 
 
 def do_slice(input_file, speed, mode='bw', resolution=10, flip_y=False):
+    if input_file.name:
+        file_name, _ = os.path.splitext(os.path.basename(input_file.name))
+    else:
+        file_name = 'output'
+
     w, h, image = benbox_slicer.image_reader.read_image(input_file)
 
     if mode == 'bw':
@@ -54,7 +60,7 @@ def do_slice(input_file, speed, mode='bw', resolution=10, flip_y=False):
     del image
 
     # Write preview PNG
-    with open('preview.png', 'wb') as fle:
+    with open(file_name + 'preview.png', 'wb') as fle:
         img = png.Writer(w, h, greyscale=True, bitdepth=8)
         img.write(fle, laser_values)
 
@@ -62,5 +68,5 @@ def do_slice(input_file, speed, mode='bw', resolution=10, flip_y=False):
         # 0,0 is normally at the bottom left so we flip the data
         laser_values.reverse()
 
-    with open('output.gcode', 'w') as file_gcode:
-         benbox_slicer.gcode.write_gcode(file_gcode, w, h, laser_values, resolution=resolution, speed=speed)
+    with open(file_name + '.gcode', 'w') as file_gcode:
+        benbox_slicer.gcode.write_gcode(file_gcode, w, h, laser_values, resolution=resolution, speed=speed)
