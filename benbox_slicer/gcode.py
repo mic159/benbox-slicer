@@ -53,5 +53,4 @@ def write_gcode(output_file, w, h, laser_values, resolution, speed):
 
 
     # Finalise
-    output_file.write('G00 X0 Y0; home\n')
     output_file.write('G28; home all axes\n')
