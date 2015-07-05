@@ -10,14 +10,14 @@ class ChoicesInput(object):
         self.choices = choices
         self.cast = cast
 
-    def __call__(self, input):
+    def __call__(self, value):
         try:
-            input = self.cast(input)
+            value = self.cast(value)
         except ValueError:
             pass
-        if input not in self.choices:
-            raise argparse.ArgumentTypeError('Choices are '+ str(self.choices))
-        return input
+        if value not in self.choices:
+            raise argparse.ArgumentTypeError('Choices are ' + str(self.choices))
+        return value
 
 
 def cli():
@@ -25,7 +25,7 @@ def cli():
     parser.add_argument('--input', type=argparse.FileType('r'), help='File to slice', required=True)
     parser.add_argument('--speed', type=int, default=200, help='The speed of the laser while on')
     parser.add_argument('--resolution',
-                        type=ChoicesInput([1,2,5,10], cast=int),
+                        type=ChoicesInput([1, 2, 5, 10], cast=int),
                         default=10,
                         help='The resolution in lines per mm. Choices: 1, 2, 5, 10'
                         )
