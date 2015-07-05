@@ -12,7 +12,7 @@ def write_gcode(output_file, w, h, laser_values, resolution, speed):
     for y in range(h):
         gcode_y = float(y)/resolution
         row = range(w)
-        row_end = w
+        row_end = w - 1
         # Alt rows are backwards
         if y % 2:
             row = reversed(range(w))
