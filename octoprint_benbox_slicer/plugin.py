@@ -15,6 +15,7 @@ def png_file_support(*args, **kwargs):
         }
     }
 
+
 class BenboxSlicer(octoprint.plugin.SlicerPlugin,
                    octoprint.plugin.StartupPlugin):
     TYPE = 'benboxslicer'
@@ -94,13 +95,13 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
         laser_values.reverse()
 
         with open(machinecode_path, 'w') as output_file:
-             benbox_slicer.gcode.write_gcode(
-                 output_file,
-                 w, h,
-                 laser_values=laser_values,
-                 resolution=10,
-                 speed=200
-             )
+            benbox_slicer.gcode.write_gcode(
+                output_file,
+                w, h,
+                laser_values=laser_values,
+                resolution=10,
+                speed=200
+            )
 
         self._logger.info('Sliced!')
 
