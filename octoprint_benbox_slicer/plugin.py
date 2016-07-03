@@ -11,7 +11,7 @@ import benbox_slicer.gcode
 def png_file_support(*args, **kwargs):
     return {
         'model': {
-            'stl': ['png']
+            'png': ['png']
         }
     }
 
@@ -37,7 +37,8 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
             type=self.TYPE,
             name='Benbox PNG',
             same_device=True,
-            progress_report=False
+            progress_report=False,
+            source_file_types=['png'],
         )
 
     def save_slicer_profile(self, path, profile, allow_overwrite=True, overrides=None):
