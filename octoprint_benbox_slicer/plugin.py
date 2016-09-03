@@ -23,11 +23,49 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
     def on_startup(self, host, port):
         from octoprint.server import slicingManager
         try:
-            slicingManager.get_profile_path(self.TYPE, 'default', must_exist=True)
+            slicingManager.get_profile_path(self.TYPE, 'speed_20', must_exist=True)
         except octoprint.slicing.exceptions.UnknownProfile:
-            self._logger.info('No default profile, creating...')
-            path = slicingManager.get_profile_path(self.TYPE, 'default')
-            self.save_slicer_profile(path, self.get_slicer_default_profile())
+            self._logger.info('No default profiles, creating...')
+            profile = self.make_profile(speed=20)
+            self.save_slicer_profile(
+                path=slicingManager.get_profile_path(self.TYPE, profile.name),
+                profile=profile,
+            )
+            profile = self.make_profile(speed=30)
+            self.save_slicer_profile(
+                path=slicingManager.get_profile_path(self.TYPE, profile.name),
+                profile=profile,
+            )
+            profile = self.make_profile(speed=40)
+            self.save_slicer_profile(
+                path=slicingManager.get_profile_path(self.TYPE, profile.name),
+                profile=profile,
+            )
+            profile = self.make_profile(speed=50)
+            self.save_slicer_profile(
+                path=slicingManager.get_profile_path(self.TYPE, profile.name),
+                profile=profile,
+            )
+            profile = self.make_profile(speed=80)
+            self.save_slicer_profile(
+                path=slicingManager.get_profile_path(self.TYPE, profile.name),
+                profile=profile,
+            )
+            profile = self.make_profile(speed=100)
+            self.save_slicer_profile(
+                path=slicingManager.get_profile_path(self.TYPE, profile.name),
+                profile=profile,
+            )
+            profile = self.make_profile(speed=120)
+            self.save_slicer_profile(
+                path=slicingManager.get_profile_path(self.TYPE, profile.name),
+                profile=profile,
+            )
+            profile = self.make_profile(speed=200)
+            self.save_slicer_profile(
+                path=slicingManager.get_profile_path(self.TYPE, profile.name),
+                profile=profile,
+            )
 
     def is_slicer_configured(self):
         return True
@@ -63,20 +101,23 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
         )
         return profile
 
-    def get_slicer_default_profile(self):
+    def make_profile(self, speed=20):
         default_settings = {
-            'speed': 200,
+            'speed': speed,
             'mode': 'bw',
             'resolution': 10
         }
         profile = octoprint.slicing.SlicingProfile(
             self.TYPE,
-            name='default',
+            name='speed_{speed}'.format(**default_settings),
             data=default_settings,
-            display_name='Default',
-            description='The default profile for Benbox PNG slicer'
+            display_name='Speed: {speed}'.format(**default_settings),
+            description='Speed: {speed}, Resolution: {resolution}, Mode: {mode}.'.format(**default_settings)
         )
         return profile
+
+    def get_slicer_default_profile(self):
+        return self.make_profile(speed=20)
 
     def do_slice(self, model_path, printer_profile, machinecode_path=None,
                  profile_path=None, position=None,
@@ -85,6 +126,9 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
         if not machinecode_path:
             machinecode_path = model_path + '.gcode'
         self._logger.info('Slicing to %s', machinecode_path)
+
+        profile = self.get_slicer_profile(profile_path)
+        self._logger.info('profile: %r. %r', profile, profile.data)
 
         with open(model_path, 'rb') as input_fle:
             w, h, image = benbox_slicer.image_reader.read_image(input_fle)
@@ -100,8 +144,8 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
                 output_file,
                 w, h,
                 laser_values=laser_values,
-                resolution=10,
-                speed=200
+                resolution=profile.data.get('resolution', 10),
+                speed=profile.data.get('speed', 20),
             )
 
         self._logger.info('Sliced!')
