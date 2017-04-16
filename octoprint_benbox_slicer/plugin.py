@@ -23,7 +23,7 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
     def on_startup(self, host, port):
         from octoprint.server import slicingManager
         try:
-            slicingManager.get_profile_path(self.TYPE, 'speed_20', must_exist=True)
+            slicingManager.get_profile_path(self.TYPE, 'speed_180', must_exist=True)
         except octoprint.slicing.exceptions.UnknownProfile:
             self._logger.info('No default profiles, creating...')
             profile = self.make_profile(speed=20)
@@ -57,6 +57,11 @@ class BenboxSlicer(octoprint.plugin.SlicerPlugin,
                 profile=profile,
             )
             profile = self.make_profile(speed=120)
+            self.save_slicer_profile(
+                path=slicingManager.get_profile_path(self.TYPE, profile.name),
+                profile=profile,
+            )
+            profile = self.make_profile(speed=180)
             self.save_slicer_profile(
                 path=slicingManager.get_profile_path(self.TYPE, profile.name),
                 profile=profile,

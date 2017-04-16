@@ -7,7 +7,7 @@ Also includes an [OctoPrint](http://octoprint.org/) plugin!
 
 This code was based on Inkscape plugin at [305engineering/Inkscape](https://github.com/305engineering/Inkscape).
 
-It works with PNG images at 240dpi
+It works with PNG images at 240dpi (NOTE: Transparent backgrounds do not work)
 
 Usage
 -----
